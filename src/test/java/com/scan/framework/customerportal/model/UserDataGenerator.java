@@ -16,20 +16,28 @@ public class UserDataGenerator {
   public static void main(String[] args) throws IOException {
     
     int num = 4;
-    String format = "json";
+    String format = "csv";
     
     List<UserData> users = generateUsers(num);
-    if (format.equals("csv")) {
-      File file = new File("scanco/src/test/resources/users.csv");
-      saveAsCsv(users, file);
-    } else if (format.equals("xml")) {
-      File file = new File("scanco/src/test/resources/users.xml");
-      saveAsXml(users, file);
-    } else if (format.equals("json")) {
-      File file = new File("scanco/src/test/resources/users.json");
-      saveAsJson(users, file);
-    } else {
-      System.out.println("Unrecognized format of file" + format);
+    switch (format) {
+      case "csv": {
+        File file = new File("src/test/resources/users.csv");
+        saveAsCsv(users, file);
+        break;
+      }
+      case "xml": {
+        File file = new File("src/test/resources/users.xml");
+        saveAsXml(users, file);
+        break;
+      }
+      case "json": {
+        File file = new File("src/test/resources/users.json");
+        saveAsJson(users, file);
+        break;
+      }
+      default:
+        System.out.println("Unrecognized format of file" + format);
+        break;
     }
     
     

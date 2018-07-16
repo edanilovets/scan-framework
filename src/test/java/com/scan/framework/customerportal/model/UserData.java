@@ -50,6 +50,7 @@ public class UserData {
             "login='" + login + '\'' +
             ", name='" + name + '\'' +
             ", email='" + email + '\'' +
+            ", password='" + password + '\'' +
             '}';
   }
   

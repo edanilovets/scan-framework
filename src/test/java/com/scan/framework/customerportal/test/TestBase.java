@@ -12,7 +12,7 @@ public class TestBase {
   @BeforeClass
   public void appInit() throws IOException {
     app.init();
-    app.logIn();
+    //app.logInAsAdmin();
   }
   
   @AfterClass

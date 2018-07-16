@@ -34,12 +34,16 @@ public class AppManager {
     properties.load(new FileReader(new File(System.getProperty("user.dir") + "\\src\\test\\resources\\environment.properties")));
     String browser = properties.getProperty("browser");
     
-    if (browser.equals("chrome")) {
-      driver = new ChromeDriver();
-    } else if (browser.equals("firefox")) {
-      driver = new FirefoxDriver();
-    } else if (browser.equals("ie")) {
-      driver = new InternetExplorerDriver();
+    switch (browser) {
+      case "chrome":
+        driver = new ChromeDriver();
+        break;
+      case "firefox":
+        driver = new FirefoxDriver();
+        break;
+      case "ie":
+        driver = new InternetExplorerDriver();
+        break;
     }
     
     //WebDriverWait wait = new WebDriverWait(driver, 5);
@@ -52,18 +56,45 @@ public class AppManager {
     driver.quit();
   }
   
-  public void logIn() {
+  public void logInAsAdmin() {
     driver.get(properties.getProperty("portal.homepage"));
     driver.findElement(By.id("AccountCode")).clear();
     driver.findElement(By.id("AccountCode")).click();
     driver.findElement(By.id("AccountCode")).sendKeys(properties.getProperty("portal.accountcode"));
     driver.findElement(By.id("UserName")).clear();
     driver.findElement(By.id("UserName")).click();
-    driver.findElement(By.id("UserName")).sendKeys(properties.getProperty("portal.username"));
+    driver.findElement(By.id("UserName")).sendKeys(properties.getProperty("portal.admin"));
     driver.findElement(By.id("Password")).clear();
     driver.findElement(By.id("Password")).click();
-    driver.findElement(By.id("Password")).sendKeys(properties.getProperty("portal.userpass"));
+    driver.findElement(By.id("Password")).sendKeys(properties.getProperty("portal.adminpass"));
     driver.findElement(By.cssSelector("input[value='Log in']")).click();
+  }
+  
+  public boolean logIn(String user, String password) {
+    driver.get(properties.getProperty("portal.homepage"));
+    driver.findElement(By.id("AccountCode")).clear();
+    driver.findElement(By.id("AccountCode")).click();
+    driver.findElement(By.id("AccountCode")).sendKeys(properties.getProperty("portal.accountcode"));
+    driver.findElement(By.id("UserName")).clear();
+    driver.findElement(By.id("UserName")).click();
+    driver.findElement(By.id("UserName")).sendKeys(user);
+    driver.findElement(By.id("Password")).clear();
+    driver.findElement(By.id("Password")).click();
+    driver.findElement(By.id("Password")).sendKeys(password);
+    driver.findElement(By.cssSelector("input[value='Log in']")).click();
+    
+    if (driver.getCurrentUrl().equals("https://acumatica-staged.scancocloud.com/")) {
+      return false;
+    } else {
+      String welcome = driver.findElement(By.cssSelector("#logoutForm div")).getText();
+      return welcome.equals("Hello " + user + "!");
+    }
+    
+    
+  }
+  
+  public void logOut() {
+    driver.findElement(By.linkText("Log off")).click();
   }
   
   public void addNewUser(UserData user) {
@@ -114,4 +145,6 @@ public class AppManager {
       System.out.println(u);
     }
   }
+  
+  
 }
